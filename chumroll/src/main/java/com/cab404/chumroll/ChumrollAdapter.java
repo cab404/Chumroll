@@ -4,7 +4,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ListAdapter;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,7 +35,7 @@ public class ChumrollAdapter extends BaseAdapter {
     /**
      * Contains list of types of ViewConverters present in this adapter.
      */
-    protected List<Class<? extends ViewConverter>> typed;
+    protected List<ViewConverter> usedConverters;
 
     /**
      * Contains instances of ViewConverters
@@ -54,13 +53,9 @@ public class ChumrollAdapter extends BaseAdapter {
     protected LayoutInflater inf;
 
     {
+        usedConverters = new ArrayList<>();
         converters = new ConverterPool();
-        typed = new ArrayList<>();
         list = new ArrayList<>();
-    }
-
-    public ChumrollAdapter() {
-        super();
     }
 
     /**
@@ -71,9 +66,9 @@ public class ChumrollAdapter extends BaseAdapter {
     }
 
     /**
-     * Simple entry type.
+     * Simple entry POJO.
      */
-    protected /*struct*/ class ViewBinder<From> {
+    protected class ViewBinder<From> {
         ViewConverter<? extends From> converter;
         From data;
 
@@ -88,9 +83,9 @@ public class ChumrollAdapter extends BaseAdapter {
      * Returns first index in adapter, which has given data.
      */
     public int indexOf(Object data) {
-        for (int $i = 0; $i < list.size(); $i++)
-            if (list.get($i).data == data)
-                return $i;
+        for (int i = 0; i < list.size(); i++)
+            if (list.get(i).data == data)
+                return i;
         return -1;
     }
 
@@ -100,8 +95,8 @@ public class ChumrollAdapter extends BaseAdapter {
     @SuppressWarnings("unchecked")
     public <Data> void add(Class<? extends ViewConverter<Data>> converter, Data data) {
         ViewConverter<Data> instance = (ViewConverter<Data>) converters.getInstance(converter);
-        if (!typed.contains(converter))
-            typed.add(converter);
+        if (!usedConverters.contains(instance))
+            usedConverters.add(instance);
         list.add(new ViewBinder<>(instance, data));
     }
 
@@ -111,11 +106,13 @@ public class ChumrollAdapter extends BaseAdapter {
     @SuppressWarnings("unchecked")
     public <Data> void addAll(Class<? extends ViewConverter<Data>> converter, Collection<? extends Data> data_set) {
         ViewConverter<Data> instance = (ViewConverter<Data>) converters.getInstance(converter);
-        if (!typed.contains(converter))
-            typed.add(converter);
+        if (!usedConverters.contains(instance))
+            usedConverters.add(instance);
         for (Data data : data_set)
-            list.add(new ViewBinder<Data>(instance, data));
+            list.add(new ViewBinder<>(instance, data));
     }
+
+
 
     public Object getData(int at) {
         return list.get(at).data;
@@ -126,6 +123,7 @@ public class ChumrollAdapter extends BaseAdapter {
      */
     public void clear() {
         list.clear();
+        usedConverters.clear();
         notifyDataSetChanged();
     }
 
@@ -150,13 +148,13 @@ public class ChumrollAdapter extends BaseAdapter {
 
     @Override
     public int getViewTypeCount() {
-        return converters.instances.size();
+        return usedConverters.size();
     }
 
     @Override
     public int getItemViewType(int position) {
         ViewConverter converter = list.get(position).converter;
-        return typed.indexOf(converter.getClass());
+        return usedConverters.indexOf(converter);
     }
 
     @Override
@@ -210,6 +208,7 @@ public class ChumrollAdapter extends BaseAdapter {
     public void prepareFor(ViewConverter... prepare_to_what) {
         for (ViewConverter thing : prepare_to_what) {
             converters.enforceInstance(thing);
+            usedConverters.add(thing);
         }
     }
 
