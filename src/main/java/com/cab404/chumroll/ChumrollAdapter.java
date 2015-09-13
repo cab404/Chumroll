@@ -88,7 +88,26 @@ public class ChumrollAdapter extends BaseAdapter {
                 return i;
         return -1;
     }
+    /**
+     * Adds new entry into adapter.
+     */
+    @SuppressWarnings("unchecked")
+    public <Data> void add(ViewConverter<Data> instance, Data data) {
+        if (!usedConverters.contains(instance))
+            usedConverters.add(instance);
+        list.add(new ViewBinder<>(instance, data));
+    }
 
+    /**
+     * Adds new entry into adapter.
+     */
+    @SuppressWarnings("unchecked")
+    public <Data> void addAll(ViewConverter<Data> instance, Collection<? extends Data> data_set) {
+        if (!usedConverters.contains(instance))
+            usedConverters.add(instance);
+        for (Data data : data_set)
+            list.add(new ViewBinder<>(instance, data));
+    }
     /**
      * Adds new entry into adapter.
      */
