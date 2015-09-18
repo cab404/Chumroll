@@ -71,10 +71,13 @@ public class ChumrollAdapter extends BaseAdapter {
     protected class ViewBinder<From> {
         ViewConverter<? extends From> converter;
         From data;
+        final int id;
 
         public ViewBinder(ViewConverter<? extends From> converter, From data) {
             this.converter = converter;
             this.data = data;
+            final int rnd = (int) (Math.random() * Integer.MAX_VALUE);
+            this.id = converter.hashCode() ^ rnd;
         }
 
     }
@@ -88,14 +91,17 @@ public class ChumrollAdapter extends BaseAdapter {
                 return i;
         return -1;
     }
+
     /**
      * Adds new entry into adapter.
      */
     @SuppressWarnings("unchecked")
-    public <Data> void add(ViewConverter<Data> instance, Data data) {
+    public <Data> int add(ViewConverter<Data> instance, Data data) {
         if (!usedConverters.contains(instance))
             usedConverters.add(instance);
-        list.add(new ViewBinder<>(instance, data));
+        final ViewBinder<Data> binder = new ViewBinder<>(instance, data);
+        list.add(binder);
+        return binder.id;
     }
 
     /**
@@ -108,15 +114,40 @@ public class ChumrollAdapter extends BaseAdapter {
         for (Data data : data_set)
             list.add(new ViewBinder<>(instance, data));
     }
+
+    public void removeById(int id) {
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i).id == id) {
+                list.remove(i);
+                notifyDataSetChanged();
+                break;
+            }
+        }
+    }
+
+    public int indexOfId(int id) {
+        for (int i = 0; i < list.size(); i++)
+            if (list.get(i).id == id)
+                return i;
+        return -1;
+    }
+
+    public int idOf(int index) {
+        return list.get(index).id;
+    }
+
+
     /**
      * Adds new entry into adapter.
      */
     @SuppressWarnings("unchecked")
-    public <Data> void add(Class<? extends ViewConverter<Data>> converter, Data data) {
+    public <Data> int add(Class<? extends ViewConverter<Data>> converter, Data data) {
         ViewConverter<Data> instance = (ViewConverter<Data>) converters.getInstance(converter);
         if (!usedConverters.contains(instance))
             usedConverters.add(instance);
-        list.add(new ViewBinder<>(instance, data));
+        final ViewBinder<Data> binder = new ViewBinder<>(instance, data);
+        list.add(binder);
+        return binder.id;
     }
 
     /**
@@ -130,8 +161,6 @@ public class ChumrollAdapter extends BaseAdapter {
         for (Data data : data_set)
             list.add(new ViewBinder<>(instance, data));
     }
-
-
 
     public Object getData(int at) {
         return list.get(at).data;
@@ -158,6 +187,10 @@ public class ChumrollAdapter extends BaseAdapter {
      */
     public <Data> void remove(Data what) {
         remove(indexOf(what));
+    }
+
+    public int typeIdOf(ViewConverter converter) {
+        return usedConverters.indexOf(converter);
     }
 
     @Override
