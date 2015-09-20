@@ -1,5 +1,7 @@
 package com.cab404.chumroll;
 
+import android.database.DataSetObserver;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +10,7 @@ import android.widget.BaseAdapter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Dynamic adapter, but named Chumroll because of reasons
@@ -27,6 +30,10 @@ import java.util.List;
  * <br/>
  * Actually, I don't know, why do I've added automatic creation of converters using reflection, yet
  * it saves two or three lines of code occasionally.
+ * <br/>
+ * Generally you can't modify it's data outside main thread,
+ * yet if you really, like REALLY want - create a thread that
+ * returns {@code true} in {@code equals()} with {@code Looper.getMainLooper().getThread()}
  *
  * @author cab404
  */
@@ -82,6 +89,28 @@ public class ChumrollAdapter extends BaseAdapter {
 
     }
 
+    AtomicInteger observers = new AtomicInteger(0);
+
+    @Override
+    public void registerDataSetObserver(DataSetObserver observer) {
+        if (observer == null) return;
+        observers.incrementAndGet();
+        super.registerDataSetObserver(observer);
+    }
+
+    @Override
+    public void unregisterDataSetObserver(DataSetObserver observer) {
+        observers.decrementAndGet();
+        super.unregisterDataSetObserver(observer);
+    }
+
+    void throwIfIllegal() {
+        if (observers.get() == 0)
+            return;
+        if (!Thread.currentThread().equals(Looper.getMainLooper().getThread()))
+            throw new UnsupportedOperationException("Operation should be done outside main thread!");
+    }
+
     /**
      * Returns first index in adapter, which has given data.
      */
@@ -97,10 +126,26 @@ public class ChumrollAdapter extends BaseAdapter {
      */
     @SuppressWarnings("unchecked")
     public <Data> int add(ViewConverter<Data> instance, Data data) {
+        throwIfIllegal();
         if (!usedConverters.contains(instance))
             usedConverters.add(instance);
         final ViewBinder<Data> binder = new ViewBinder<>(instance, data);
         list.add(binder);
+        notifyDataSetChanged();
+        return binder.id;
+    }
+
+    /**
+     * Adds new entry into adapter.
+     */
+    @SuppressWarnings("unchecked")
+    public <Data> int add(int index, ViewConverter<Data> instance, Data data) {
+        throwIfIllegal();
+        if (!usedConverters.contains(instance))
+            usedConverters.add(instance);
+        final ViewBinder<Data> binder = new ViewBinder<>(instance, data);
+        list.add(index, binder);
+        notifyDataSetChanged();
         return binder.id;
     }
 
@@ -109,13 +154,16 @@ public class ChumrollAdapter extends BaseAdapter {
      */
     @SuppressWarnings("unchecked")
     public <Data> void addAll(ViewConverter<Data> instance, Collection<? extends Data> data_set) {
+        throwIfIllegal();
         if (!usedConverters.contains(instance))
             usedConverters.add(instance);
         for (Data data : data_set)
             list.add(new ViewBinder<>(instance, data));
+        notifyDataSetChanged();
     }
 
     public void removeById(int id) {
+        throwIfIllegal();
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i).id == id) {
                 list.remove(i);
@@ -136,12 +184,12 @@ public class ChumrollAdapter extends BaseAdapter {
         return list.get(index).id;
     }
 
-
     /**
      * Adds new entry into adapter.
      */
     @SuppressWarnings("unchecked")
     public <Data> int add(Class<? extends ViewConverter<Data>> converter, Data data) {
+        throwIfIllegal();
         ViewConverter<Data> instance = (ViewConverter<Data>) converters.getInstance(converter);
         if (!usedConverters.contains(instance))
             usedConverters.add(instance);
@@ -150,16 +198,34 @@ public class ChumrollAdapter extends BaseAdapter {
         return binder.id;
     }
 
+
+    /**
+     * Adds new entry into adapter.
+     */
+    @SuppressWarnings("unchecked")
+    public <Data> int add(int index, Class<? extends ViewConverter<Data>> converter, Data data) {
+        throwIfIllegal();
+        ViewConverter<Data> instance = (ViewConverter<Data>) converters.getInstance(converter);
+        if (!usedConverters.contains(instance))
+            usedConverters.add(instance);
+        final ViewBinder<Data> binder = new ViewBinder<>(instance, data);
+        list.add(index, binder);
+        return binder.id;
+    }
+
+
     /**
      * Adds new entry into adapter.
      */
     @SuppressWarnings("unchecked")
     public <Data> void addAll(Class<? extends ViewConverter<Data>> converter, Collection<? extends Data> data_set) {
+        throwIfIllegal();
         ViewConverter<Data> instance = (ViewConverter<Data>) converters.getInstance(converter);
         if (!usedConverters.contains(instance))
             usedConverters.add(instance);
         for (Data data : data_set)
             list.add(new ViewBinder<>(instance, data));
+        notifyDataSetChanged();
     }
 
     public Object getData(int at) {
@@ -179,6 +245,7 @@ public class ChumrollAdapter extends BaseAdapter {
      * Removes entry at given index
      */
     public void remove(int at) {
+        throwIfIllegal();
         list.remove(at);
     }
 
