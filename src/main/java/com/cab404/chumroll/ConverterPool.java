@@ -5,7 +5,7 @@ package com.cab404.chumroll;
  *
  * @author cab404
  */
-class ConverterPool extends ConstructingPool<ViewConverter> {
+public class ConverterPool extends ConstructingPool<ViewConverter> {
 
     @Override
     protected ViewConverter<?> makeInstance(Class<? extends ViewConverter> clazz) {

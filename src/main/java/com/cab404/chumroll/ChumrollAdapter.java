@@ -116,7 +116,7 @@ public class ChumrollAdapter extends BaseAdapter {
      */
     public int indexOf(Object data) {
         for (int i = 0; i < list.size(); i++)
-            if (list.get(i).data == data)
+            if (list.get(i).data.equals(data))
                 return i;
         return -1;
     }
@@ -236,6 +236,7 @@ public class ChumrollAdapter extends BaseAdapter {
      * Removes everything from adapter.
      */
     public void clear() {
+        throwIfIllegal();
         list.clear();
         usedConverters.clear();
         notifyDataSetChanged();
