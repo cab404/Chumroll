@@ -115,6 +115,7 @@ public class ChumrollAdapter extends BaseAdapter {
      * Returns first index in adapter, which has given data.
      */
     public int indexOf(Object data) {
+        throwIfIllegal();
         for (int i = 0; i < list.size(); i++)
             if (list.get(i).data.equals(data))
                 return i;
