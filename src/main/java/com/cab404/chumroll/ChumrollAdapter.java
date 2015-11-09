@@ -2,6 +2,7 @@ package com.cab404.chumroll;
 
 import android.database.DataSetObserver;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,6 +59,13 @@ public class ChumrollAdapter extends BaseAdapter {
      * Cached layout inflater
      */
     protected LayoutInflater inf;
+
+    int id = (int) (Math.random() * 40000);
+
+    public ChumrollAdapter() {
+//        Log.e("CREATION OF ", "ADAPTER " + id);
+//        new RuntimeException().printStackTrace();
+    }
 
     {
         usedConverters = new ArrayList<>();
@@ -128,8 +136,7 @@ public class ChumrollAdapter extends BaseAdapter {
     @SuppressWarnings("unchecked")
     public <Data> int add(ViewConverter<Data> instance, Data data) {
         throwIfIllegal();
-        if (!usedConverters.contains(instance))
-            usedConverters.add(instance);
+        addConverterWithCheck(instance);
         final ViewBinder<Data> binder = new ViewBinder<>(instance, data);
         list.add(binder);
         notifyDataSetChanged();
@@ -142,8 +149,7 @@ public class ChumrollAdapter extends BaseAdapter {
     @SuppressWarnings("unchecked")
     public <Data> int add(int index, ViewConverter<Data> instance, Data data) {
         throwIfIllegal();
-        if (!usedConverters.contains(instance))
-            usedConverters.add(instance);
+        addConverterWithCheck(instance);
         final ViewBinder<Data> binder = new ViewBinder<>(instance, data);
         list.add(index, binder);
         notifyDataSetChanged();
@@ -156,8 +162,7 @@ public class ChumrollAdapter extends BaseAdapter {
     @SuppressWarnings("unchecked")
     public <Data> void addAll(ViewConverter<Data> instance, Collection<? extends Data> data_set) {
         throwIfIllegal();
-        if (!usedConverters.contains(instance))
-            usedConverters.add(instance);
+        addConverterWithCheck(instance);
         for (Data data : data_set)
             list.add(new ViewBinder<>(instance, data));
         notifyDataSetChanged();
@@ -190,13 +195,8 @@ public class ChumrollAdapter extends BaseAdapter {
      */
     @SuppressWarnings("unchecked")
     public <Data> int add(Class<? extends ViewConverter<Data>> converter, Data data) {
-        throwIfIllegal();
         ViewConverter<Data> instance = (ViewConverter<Data>) converters.getInstance(converter);
-        if (!usedConverters.contains(instance))
-            usedConverters.add(instance);
-        final ViewBinder<Data> binder = new ViewBinder<>(instance, data);
-        list.add(binder);
-        return binder.id;
+        return add(instance, data);
     }
 
 
@@ -205,13 +205,8 @@ public class ChumrollAdapter extends BaseAdapter {
      */
     @SuppressWarnings("unchecked")
     public <Data> int add(int index, Class<? extends ViewConverter<Data>> converter, Data data) {
-        throwIfIllegal();
         ViewConverter<Data> instance = (ViewConverter<Data>) converters.getInstance(converter);
-        if (!usedConverters.contains(instance))
-            usedConverters.add(instance);
-        final ViewBinder<Data> binder = new ViewBinder<>(instance, data);
-        list.add(index, binder);
-        return binder.id;
+        return add(index, instance, data);
     }
 
 
@@ -220,13 +215,21 @@ public class ChumrollAdapter extends BaseAdapter {
      */
     @SuppressWarnings("unchecked")
     public <Data> void addAll(Class<? extends ViewConverter<Data>> converter, Collection<? extends Data> data_set) {
-        throwIfIllegal();
         ViewConverter<Data> instance = (ViewConverter<Data>) converters.getInstance(converter);
-        if (!usedConverters.contains(instance))
+        addAll(instance, data_set);
+    }
+
+    private <Data> void addConverterWithCheck(ViewConverter<Data> instance) {
+        if (!usedConverters.contains(instance)) {
+            if (observers.get() > 0){
+//                Log.e("LISTED CONVERTERS", "LENGTH " + usedConverters.size() + " of " + id);
+//                for (ViewConverter usedConverter : usedConverters) {
+//                    Log.e("LISTED CONVERTERS", usedConverter.getClass().getName());
+//                }
+                throw new RuntimeException(instance.getClass().getName() + ": Cannot add new data types on fly :(");
+            }
             usedConverters.add(instance);
-        for (Data data : data_set)
-            list.add(new ViewBinder<>(instance, data));
-        notifyDataSetChanged();
+        }
     }
 
     public Object getData(int at) {
@@ -239,8 +242,14 @@ public class ChumrollAdapter extends BaseAdapter {
     public void clear() {
         throwIfIllegal();
         list.clear();
-        usedConverters.clear();
         notifyDataSetChanged();
+    }
+
+    /**
+     * Removes every converter from adapter.
+     */
+    public void clearConverters(){
+        usedConverters.clear();
     }
 
     /**
@@ -329,8 +338,11 @@ public class ChumrollAdapter extends BaseAdapter {
     public void prepareFor(ViewConverter... prepare_to_what) {
         for (ViewConverter thing : prepare_to_what) {
             converters.enforceInstance(thing);
+            if (observers.get() > 0)
+                throw new RuntimeException("Cannot add new data types on fly :(");
             usedConverters.add(thing);
         }
+//        Log.e("LISTED CONVERTERS", "LENGTH " + usedConverters.size() + " of " + id);
     }
 
 }
