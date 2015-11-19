@@ -2,7 +2,6 @@ package com.cab404.chumroll;
 
 import android.database.DataSetObserver;
 import android.os.Looper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -311,7 +310,7 @@ public class ChumrollAdapter extends BaseAdapter {
     @Override
     public boolean isEnabled(int position) {
         ViewBinder binder = list.get(position);
-        return binder.converter.enabled(binder.data, position);
+        return binder.converter.enabled(binder.data, position, this);
     }
 
     @SuppressWarnings("unchecked")
@@ -324,10 +323,10 @@ public class ChumrollAdapter extends BaseAdapter {
             if (inf == null || inf.getContext() != parent.getContext())
                 inf = LayoutInflater.from(parent.getContext());
 
-            convertView = binder.converter.createView(parent, inf);
+            convertView = binder.converter.createView(inf, parent, this);
         }
 
-        binder.converter.convert(convertView, binder.data, position, parent);
+        binder.converter.convert(convertView, binder.data, position, parent, this);
 
         return convertView;
     }
