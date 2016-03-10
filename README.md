@@ -10,4 +10,6 @@ of dealing with one-typed adapters too!
 simple example app is in `chumroll-example` module.
 i also use it in my project [phclient](https://github.com/cab404/phclient), where it proved itself reliable.
 
+to use it just add `compile 'com.cab404.chumroll:chumroll:1.0'` to your module dependencies
+
 pumpkins and overpowered anthro dogs are not included.
