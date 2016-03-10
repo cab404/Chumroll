@@ -4,7 +4,7 @@ ext {
     bintrayRepo = 'maven'
     bintrayName = 'chumroll'
 
-    publishedGroupId = 'com.cab404.chumroll'
+    publishedGroupId = 'com.cab404'
     libraryName = 'chumroll'
     artifact = 'chumroll'
 
