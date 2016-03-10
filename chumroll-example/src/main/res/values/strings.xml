@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="prefix">
+        <item>Dominate this world with the</item>
+        <item>Tremble before almighty power of the</item>
+        <item>Watch out! Here comes</item>
+        <item>Never underestimate power of the</item>
+        <item>Oh, it\'s nothing special, it\'s just my</item>
+        <item>Fear not, my child! I will bring you the light of</item>
+        <item>Exterminate those pests,</item>
+        <item>I love this smell, the smell of the</item>
+        <item>The only thing that can save us now is</item>
+        <item>Nobody expects the</item>
+        <item>Our village was destroyed by the evil</item>
+        <item>I choose you,</item>
+        <item>Nothing can wake you up in the morning like the</item>
+        <item>Sole purpose of your existence is in serving the</item>
+        <item>Release the</item>
+        <item>It\'s all</item>
+    </string-array>
+    <string-array name="start_part">
+        <item>hyper</item>
+        <item>super</item>
+        <item>uber</item>
+        <item>turbo</item>
+        <item>quad</item>
+        <item>tetra</item>
+        <item>octo</item>
+        <item>deca</item>
+        <item>nano</item>
+        <item>pico</item>
+        <item>giga</item>
+        <item>omni</item>
+        <item>fire</item>
+        <item>meta</item>
+        <item>retro</item>
+        <item>antro</item>
+        <item>boom</item>
+        <item>xeno</item>
+    </string-array>
+    <string-array name="end_part">
+        <item>space</item>
+        <item>time</item>
+        <item>axe</item>
+        <item>sword</item>
+        <item>pirate</item>
+        <item>nova</item>
+        <item>beast</item>
+        <item>fun</item>
+        <item>cat</item>
+        <item>jam</item>
+        <item>bug</item>
+        <item>dog</item>
+        <item>action</item>
+        <item>stick</item>
+        <item>pumpkin</item>
+        <item>shark</item>
+        <item>cop</item>
+        <item>gem</item>
+        <item>worm</item>
+        <item>morph</item>
+        <item>troll</item>
+    </string-array>
+    <string name="visit_on_github">Visit on GitHub</string>
+</resources>

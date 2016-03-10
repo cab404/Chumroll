@@ -1,12 +1,13 @@
-Chumroll
+chumroll
 ========
 
-Easy to use ('yet easier to get shot in your knee' - status on 19.09.2015) dynamic adapter.
+lightweight and easy to use dynamic adapter.
 
-Basically it's a thing for more intuitive way to add different types of views into
-AbsListViews, than regular 'moar adapterz' approach. And it can improve your experience
+basically it's a more intuitive way to add different types of views into
+listviews, than regular 'moar adapterz' approach. and it can improve your experience
 of dealing with one-typed adapters too!
 
-And there's no examples yet. Sorry for that :/
+simple example app is in `chumroll-example` module.
+i also use it in my project [phclient](https://github.com/cab404/phclient), where it proved itself reliable.
 
-Pumpkins and overpowered anthro dogs are not included.
+pumpkins and overpowered anthro dogs are not included.

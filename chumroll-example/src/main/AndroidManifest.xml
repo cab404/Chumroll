@@ -1,0 +1,19 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.cab404.chumroll.example">
+
+    <application
+        android:allowBackup="true"
+        android:label="Chumroll">
+        <activity
+            android:name="com.cab404.chumroll.TestActivity"
+            android:screenOrientation="sensorPortrait"
+            >
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

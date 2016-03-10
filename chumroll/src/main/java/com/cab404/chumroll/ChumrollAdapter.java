@@ -59,13 +59,6 @@ public class ChumrollAdapter extends BaseAdapter {
      */
     protected LayoutInflater inf;
 
-    int id = (int) (Math.random() * 40000);
-
-    public ChumrollAdapter() {
-//        Log.e("CREATION OF ", "ADAPTER " + id);
-//        new RuntimeException().printStackTrace();
-    }
-
     {
         usedConverters = new ArrayList<>();
         converters = new ConverterPool();
@@ -73,7 +66,7 @@ public class ChumrollAdapter extends BaseAdapter {
     }
 
     /**
-     * Returns converter pool used by this adapter;
+     * @returns converter pool used by this adapter;
      */
     public ConverterPool getConverters() {
         return converters;
@@ -96,7 +89,6 @@ public class ChumrollAdapter extends BaseAdapter {
 
     }
 
-    AtomicInteger observers = new AtomicInteger(0);
 
     @Override
     public void registerDataSetObserver(DataSetObserver observer) {
@@ -111,15 +103,18 @@ public class ChumrollAdapter extends BaseAdapter {
         super.unregisterDataSetObserver(observer);
     }
 
-    void throwIfIllegal() {
+    protected AtomicInteger observers = new AtomicInteger(0);
+    protected void throwIfIllegal() {
         if (observers.get() == 0)
             return;
         if (!Thread.currentThread().equals(Looper.getMainLooper().getThread()))
-            throw new UnsupportedOperationException("Operation should be done outside main thread!");
+            throw new UnsupportedOperationException(
+                    "Operation on connected adapter should be done inside main thread!"
+            );
     }
 
     /**
-     * Returns first index in adapter, which has given data.
+     * @returns first index in adapter, which has given data.
      */
     public int indexOf(Object data) {
         throwIfIllegal();
@@ -167,6 +162,14 @@ public class ChumrollAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    /**
+     *  Removes item by its id.
+     *
+     *  @see ChumrollAdapter#add(Class, Object)
+     *  @see ChumrollAdapter#add(ViewConverter, Object)
+     *  @see ChumrollAdapter#add(int, Class, Object)
+     *  @see ChumrollAdapter#add(int, ViewConverter, Object)
+     */
     public void removeById(int id) {
         throwIfIllegal();
         for (int i = 0; i < list.size(); i++) {
@@ -178,6 +181,14 @@ public class ChumrollAdapter extends BaseAdapter {
         }
     }
 
+    /**
+     *  @returns index in list of item with given id.
+     *
+     *  @see ChumrollAdapter#add(Class, Object)
+     *  @see ChumrollAdapter#add(ViewConverter, Object)
+     *  @see ChumrollAdapter#add(int, Class, Object)
+     *  @see ChumrollAdapter#add(int, ViewConverter, Object)
+     */
     public int indexOfId(int id) {
         for (int i = 0; i < list.size(); i++)
             if (list.get(i).id == id)
@@ -185,12 +196,16 @@ public class ChumrollAdapter extends BaseAdapter {
         return -1;
     }
 
+    /**
+     *  @returns id of item with given index in list.
+     */
     public int idOf(int index) {
         return list.get(index).id;
     }
 
     /**
      * Adds new entry into adapter.
+     * @return id of added item
      */
     @SuppressWarnings("unchecked")
     public <Data> int add(Class<? extends ViewConverter<Data>> converter, Data data) {
@@ -201,6 +216,7 @@ public class ChumrollAdapter extends BaseAdapter {
 
     /**
      * Adds new entry into adapter.
+     * @return id of added item
      */
     @SuppressWarnings("unchecked")
     public <Data> int add(int index, Class<? extends ViewConverter<Data>> converter, Data data) {
@@ -221,11 +237,7 @@ public class ChumrollAdapter extends BaseAdapter {
     private <Data> void addConverterWithCheck(ViewConverter<Data> instance) {
         if (!usedConverters.contains(instance)) {
             if (observers.get() > 0){
-//                Log.e("LISTED CONVERTERS", "LENGTH " + usedConverters.size() + " of " + id);
-//                for (ViewConverter usedConverter : usedConverters) {
-//                    Log.e("LISTED CONVERTERS", usedConverter.getClass().getName());
-//                }
-                throw new RuntimeException(instance.getClass().getName() + ": Cannot add new data types on fly :(");
+                throw new RuntimeException(instance.getClass().getSimpleName() + ": Cannot add new data types on fly :(");
             }
             usedConverters.add(instance);
         }
@@ -245,7 +257,7 @@ public class ChumrollAdapter extends BaseAdapter {
     }
 
     /**
-     * Removes every converter from adapter.
+     * Removes every converter from adapter. Note that data is not removed.
      */
     public void clearConverters(){
         usedConverters.clear();
@@ -266,6 +278,9 @@ public class ChumrollAdapter extends BaseAdapter {
         remove(indexOf(what));
     }
 
+    /**
+     * @returns type id of a view. Sometimes that's useful.
+     */
     public int typeIdOf(ViewConverter converter) {
         return usedConverters.indexOf(converter);
     }
@@ -332,7 +347,8 @@ public class ChumrollAdapter extends BaseAdapter {
     }
 
     /**
-     * You can stuff a bunch of converters inside right here.
+     * You can stuff a bunch of converters inside right here,
+     * if you are planning to add data of this type to adapter after connecting it to ListView.
      */
     public void prepareFor(ViewConverter... prepare_to_what) {
         for (ViewConverter thing : prepare_to_what) {
@@ -341,7 +357,6 @@ public class ChumrollAdapter extends BaseAdapter {
                 throw new RuntimeException("Cannot add new data types on fly :(");
             usedConverters.add(thing);
         }
-//        Log.e("LISTED CONVERTERS", "LENGTH " + usedConverters.size() + " of " + id);
     }
 
 }
