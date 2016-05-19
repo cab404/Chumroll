@@ -34,8 +34,8 @@ public interface ViewConverter<From> {
      * {@link android.widget.ListAdapter#isEnabled(int) isEnabled}
      * in ListAdapter.
      *
-     * @param data  Data used to modify view.
-     * @param index Index of view in list.
+     * @param data    Data used to modify view.
+     * @param index   Index of view in list.
      * @param adapter Adapter in which this converter resides
      */
     boolean enabled(From data, int index, ChumrollAdapter adapter);

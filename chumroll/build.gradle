@@ -8,12 +8,12 @@ ext {
     libraryName = 'chumroll'
     artifact = 'chumroll'
 
-    libraryDescription = 'lightweight and easy to use dynamic adapter'
+    libraryDescription = 'lightweight and easy to use dynamic adapter for Android'
 
     siteUrl = 'https://github.com/cab404/chumroll'
     gitUrl = 'https://github.com/cab404/chumroll.git'
 
-    libraryVersion = '1.0'
+    libraryVersion = '1.0.1'
 
     developerId = 'cab404'
     developerName = 'cab404'

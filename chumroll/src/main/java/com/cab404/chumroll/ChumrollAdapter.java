@@ -58,6 +58,7 @@ public class ChumrollAdapter extends BaseAdapter {
      * Cached layout inflater
      */
     protected LayoutInflater inf;
+    protected AtomicInteger observers = new AtomicInteger(0);
 
     {
         usedConverters = new ArrayList<>();
@@ -66,29 +67,11 @@ public class ChumrollAdapter extends BaseAdapter {
     }
 
     /**
-     * @returns converter pool used by this adapter;
+     * @return converter pool used by this adapter;
      */
     public ConverterPool getConverters() {
         return converters;
     }
-
-    /**
-     * Simple entry POJO.
-     */
-    protected class ViewBinder<From> {
-        ViewConverter<? extends From> converter;
-        From data;
-        final int id;
-
-        public ViewBinder(ViewConverter<? extends From> converter, From data) {
-            this.converter = converter;
-            this.data = data;
-            final int rnd = (int) (Math.random() * Integer.MAX_VALUE);
-            this.id = converter.hashCode() ^ rnd;
-        }
-
-    }
-
 
     @Override
     public void registerDataSetObserver(DataSetObserver observer) {
@@ -103,7 +86,6 @@ public class ChumrollAdapter extends BaseAdapter {
         super.unregisterDataSetObserver(observer);
     }
 
-    protected AtomicInteger observers = new AtomicInteger(0);
     protected void throwIfIllegal() {
         if (observers.get() == 0)
             return;
@@ -114,7 +96,7 @@ public class ChumrollAdapter extends BaseAdapter {
     }
 
     /**
-     * @returns first index in adapter, which has given data.
+     * @return first index in adapter, which has given data.
      */
     public int indexOf(Object data) {
         throwIfIllegal();
@@ -163,12 +145,12 @@ public class ChumrollAdapter extends BaseAdapter {
     }
 
     /**
-     *  Removes item by its id.
+     * Removes item by its id.
      *
-     *  @see ChumrollAdapter#add(Class, Object)
-     *  @see ChumrollAdapter#add(ViewConverter, Object)
-     *  @see ChumrollAdapter#add(int, Class, Object)
-     *  @see ChumrollAdapter#add(int, ViewConverter, Object)
+     * @see ChumrollAdapter#add(Class, Object)
+     * @see ChumrollAdapter#add(ViewConverter, Object)
+     * @see ChumrollAdapter#add(int, Class, Object)
+     * @see ChumrollAdapter#add(int, ViewConverter, Object)
      */
     public void removeById(int id) {
         throwIfIllegal();
@@ -182,12 +164,11 @@ public class ChumrollAdapter extends BaseAdapter {
     }
 
     /**
-     *  @returns index in list of item with given id.
-     *
-     *  @see ChumrollAdapter#add(Class, Object)
-     *  @see ChumrollAdapter#add(ViewConverter, Object)
-     *  @see ChumrollAdapter#add(int, Class, Object)
-     *  @see ChumrollAdapter#add(int, ViewConverter, Object)
+     * @return index in list of item with given id.
+     * @see ChumrollAdapter#add(Class, Object)
+     * @see ChumrollAdapter#add(ViewConverter, Object)
+     * @see ChumrollAdapter#add(int, Class, Object)
+     * @see ChumrollAdapter#add(int, ViewConverter, Object)
      */
     public int indexOfId(int id) {
         for (int i = 0; i < list.size(); i++)
@@ -197,7 +178,7 @@ public class ChumrollAdapter extends BaseAdapter {
     }
 
     /**
-     *  @returns id of item with given index in list.
+     * @return id of item with given index in list.
      */
     public int idOf(int index) {
         return list.get(index).id;
@@ -205,6 +186,7 @@ public class ChumrollAdapter extends BaseAdapter {
 
     /**
      * Adds new entry into adapter.
+     *
      * @return id of added item
      */
     @SuppressWarnings("unchecked")
@@ -213,9 +195,9 @@ public class ChumrollAdapter extends BaseAdapter {
         return add(instance, data);
     }
 
-
     /**
      * Adds new entry into adapter.
+     *
      * @return id of added item
      */
     @SuppressWarnings("unchecked")
@@ -223,7 +205,6 @@ public class ChumrollAdapter extends BaseAdapter {
         ViewConverter<Data> instance = (ViewConverter<Data>) converters.getInstance(converter);
         return add(index, instance, data);
     }
-
 
     /**
      * Adds new entry into adapter.
@@ -236,7 +217,7 @@ public class ChumrollAdapter extends BaseAdapter {
 
     private <Data> void addConverterWithCheck(ViewConverter<Data> instance) {
         if (!usedConverters.contains(instance)) {
-            if (observers.get() > 0){
+            if (observers.get() > 0) {
                 throw new RuntimeException(instance.getClass().getSimpleName() + ": Cannot add new data types on fly :(");
             }
             usedConverters.add(instance);
@@ -259,7 +240,7 @@ public class ChumrollAdapter extends BaseAdapter {
     /**
      * Removes every converter from adapter. Note that data is not removed.
      */
-    public void clearConverters(){
+    public void clearConverters() {
         usedConverters.clear();
     }
 
@@ -279,7 +260,7 @@ public class ChumrollAdapter extends BaseAdapter {
     }
 
     /**
-     * @returns type id of a view. Sometimes that's useful.
+     * @return type id of a view. Sometimes that's useful.
      */
     public int typeIdOf(ViewConverter converter) {
         return usedConverters.indexOf(converter);
@@ -303,12 +284,12 @@ public class ChumrollAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return getData(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return position;
+        return idOf(position);
     }
 
     @Override
@@ -357,6 +338,23 @@ public class ChumrollAdapter extends BaseAdapter {
                 throw new RuntimeException("Cannot add new data types on fly :(");
             usedConverters.add(thing);
         }
+    }
+
+    /**
+     * Simple entry POJO.
+     */
+    protected class ViewBinder<From> {
+        final int id;
+        ViewConverter<? extends From> converter;
+        From data;
+
+        public ViewBinder(ViewConverter<? extends From> converter, From data) {
+            this.converter = converter;
+            this.data = data;
+            final int rnd = (int) (Math.random() * Integer.MAX_VALUE);
+            this.id = converter.hashCode() ^ rnd;
+        }
+
     }
 
 }
