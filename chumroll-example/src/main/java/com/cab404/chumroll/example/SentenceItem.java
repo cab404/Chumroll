@@ -1,4 +1,4 @@
-package com.cab404.chumroll.item;
+package com.cab404.chumroll.example.item;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.cab404.chumroll.ChumrollAdapter;
-import com.cab404.chumroll.Sentence;
+import com.cab404.chumroll.example.Sentence;
 import com.cab404.chumroll.example.R;
 import com.cab404.chumroll.viewbinder.BindContext;
 import com.cab404.chumroll.viewbinder.ViewBinder;

@@ -1,4 +1,4 @@
-package com.cab404.chumroll.item;
+package com.cab404.chumroll.example.item;
 
 import android.view.LayoutInflater;
 import android.view.View;

@@ -1,4 +1,4 @@
-package com.cab404.chumroll;
+package com.cab404.chumroll.example;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,10 +9,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
-import com.cab404.chumroll.example.R;
-import com.cab404.chumroll.item.LabelItem;
-import com.cab404.chumroll.item.NumberItem;
-import com.cab404.chumroll.item.SentenceItem;
+import com.cab404.chumroll.ChumrollAdapter;
+import com.cab404.chumroll.example.item.LabelItem;
+import com.cab404.chumroll.example.item.NumberItem;
+import com.cab404.chumroll.example.item.SentenceItem;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -5,7 +5,7 @@
         android:allowBackup="true"
         android:label="Chumroll">
         <activity
-            android:name="com.cab404.chumroll.TestActivity"
+            android:name=".TestActivity"
             android:screenOrientation="sensorPortrait"
             >
             <intent-filter>

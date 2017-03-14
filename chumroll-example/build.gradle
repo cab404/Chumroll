@@ -5,12 +5,14 @@ android {
     buildToolsVersion "25.0.2"
 
     defaultConfig {
-        applicationId "com.cab404.chumroll"
+        applicationId "com.cab404.chumroll.example"
         minSdkVersion 10
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -21,4 +23,10 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile project(':chumroll')
+
+    testCompile 'junit:junit:4.12'
+    androidTestCompile 'com.android.support.test:runner:0.5'
+    androidTestCompile 'com.android.support.test:rules:0.5'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
+
 }

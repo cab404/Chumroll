@@ -1,4 +1,4 @@
-package com.cab404.chumroll;
+package com.cab404.chumroll.example;
 
 /**
  * Well, sorry for no comments here!
