@@ -13,7 +13,7 @@ ext {
     siteUrl = 'https://github.com/cab404/chumroll'
     gitUrl = 'https://github.com/cab404/chumroll.git'
 
-    libraryVersion = '1.0.1'
+    libraryVersion = '1.0.2'
 
     developerId = 'cab404'
     developerName = 'cab404'
@@ -29,15 +29,18 @@ repositories {
 }
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
 
     defaultConfig {
         minSdkVersion 9
-        targetSdkVersion 23
+        targetSdkVersion 25
     }
 
 }
 
 apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
 apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
+dependencies {
+    testCompile 'junit:junit:4.12'
+}
