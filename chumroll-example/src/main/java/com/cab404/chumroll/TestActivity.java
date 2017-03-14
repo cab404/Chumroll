@@ -10,6 +10,9 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.cab404.chumroll.example.R;
+import com.cab404.chumroll.item.LabelItem;
+import com.cab404.chumroll.item.NumberItem;
+import com.cab404.chumroll.item.SentenceItem;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,14 +38,17 @@ public class TestActivity extends Activity {
          so we should prepare it for that.
          */
         adapter.prepareFor(
-                new ItemA(), new ItemB(), new ItemC()
+                new NumberItem(), new SentenceItem(), new LabelItem()
         );
 
         list.setAdapter(adapter);
 
     }
 
-    protected Sentence generateSentence(){
+    /**
+     * Method to generate some words
+     */
+    protected Sentence generateSentence() {
         Sentence sentence = new Sentence();
         String[] prefixes = getResources().getStringArray(R.array.prefix);
 
@@ -54,6 +60,9 @@ public class TestActivity extends Activity {
         return sentence;
     }
 
+    /**
+     * Another method to generate some words
+     */
     private String generateWord() {
         String[] parts = getResources().getStringArray(R.array.start_part);
         String[] words = getResources().getStringArray(R.array.end_part);
@@ -78,13 +87,13 @@ public class TestActivity extends Activity {
     public void addItem(View view) {
         switch (view.getId()) {
             case R.id.a:
-                list.setSelection(adapter.indexOfId(adapter.add(ItemA.class, (int) (Math.random() * 5000))));
+                list.setSelection(adapter.indexOfId(adapter.add(NumberItem.class, (int) (Math.random() * 5000))));
                 break;
             case R.id.b:
-                list.setSelection(adapter.indexOfId(adapter.add(ItemB.class, generateSentence())));
+                list.setSelection(adapter.indexOfId(adapter.add(SentenceItem.class, generateSentence())));
                 break;
             case R.id.c:
-                list.setSelection(adapter.indexOfId(adapter.add(ItemC.class, generateWord())));
+                list.setSelection(adapter.indexOfId(adapter.add(LabelItem.class, generateWord())));
                 break;
         }
     }

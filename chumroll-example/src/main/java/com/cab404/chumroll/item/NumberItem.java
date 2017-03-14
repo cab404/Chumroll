@@ -1,21 +1,22 @@
-package com.cab404.chumroll;
+package com.cab404.chumroll.item;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.cab404.chumroll.ChumrollAdapter;
+import com.cab404.chumroll.ViewConverter;
 import com.cab404.chumroll.example.R;
 
 /**
- * Well, sorry for no comments here!
- * Still you can send me your question to me@cab404.ru!
- * <p/>
+ * Just some number info
+ * <p>
  * Created at 05:33 on 09/03/16
  *
  * @author cab404
  */
-public class ItemA implements ViewConverter<Integer> {
+public class NumberItem implements ViewConverter<Integer> {
     @Override
     public void convert(View view, Integer data, int index, ViewGroup parent, final ChumrollAdapter adapter) {
         ((TextView) view.findViewById(R.id.dec)).setText(Integer.toString(data));
