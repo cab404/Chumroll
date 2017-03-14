@@ -37,6 +37,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  * @author cab404
  */
+@SuppressWarnings("WeakerAccess")
 public class ChumrollAdapter extends BaseAdapter {
 
     /**
@@ -302,6 +303,21 @@ public class ChumrollAdapter extends BaseAdapter {
         return false;
     }
 
+    /**
+     * Returns class of converter for index
+     */
+    public Class<? extends ViewConverter> classOf(int index) {
+        return list.get(index).converter.getClass();
+    }
+
+    /**
+     * Returns converter for index
+     */
+    @SuppressWarnings("unchecked")
+    public <A extends ViewConverter> A converterOf(int index) {
+        return (A) list.get(index).converter;
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public boolean isEnabled(int position) {
@@ -338,6 +354,27 @@ public class ChumrollAdapter extends BaseAdapter {
                 throw new RuntimeException("Cannot add new data types on fly :(");
             usedConverters.add(thing);
         }
+    }
+
+    /**
+     * @return if data of item at given index is instance of given class
+     */
+    public boolean isInstanceOf(int index, Class dataType) {
+        return dataType.isInstance(list.get(index).data);
+    }
+
+    /**
+     * @return if converter of item at given index is instance of given class
+     */
+    public boolean converterIsInstanceOf(int index, Class convType) {
+        return convType.isInstance(list.get(index).converter);
+    }
+
+    /**
+     * @return converter of item at given index
+     */
+    public ViewConverter getConverterOf(int index) {
+        return list.get(index).converter;
     }
 
     /**
