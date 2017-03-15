@@ -6,9 +6,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.cab404.chumroll.ChumrollAdapter;
-import com.cab404.chumroll.example.Sentence;
 import com.cab404.chumroll.example.R;
+import com.cab404.chumroll.example.Sentence;
 import com.cab404.chumroll.viewbinder.BindContext;
+import com.cab404.chumroll.viewbinder.DataBindContext;
 import com.cab404.chumroll.viewbinder.ViewBinder;
 import com.cab404.chumroll.viewbinder.ViewBinderItem;
 
@@ -20,18 +21,17 @@ import com.cab404.chumroll.viewbinder.ViewBinderItem;
  */
 public class SentenceItem extends ViewBinderItem<Sentence> {
 
-    private class VB implements ViewBinder<Sentence> {
+    private class VB extends ViewBinder<Sentence> {
         TextView word;
         TextView prefix;
 
-        @Override
-        public void init(BindContext<Sentence> context) {
+        VB(BindContext context) {
             word = (TextView) context.getView().findViewById(R.id.word);
             prefix = (TextView) context.getView().findViewById(R.id.prefix);
         }
 
         @Override
-        public void reuse(final BindContext<Sentence> context) {
+        public void reuse(final DataBindContext<Sentence> context) {
             word.setText(context.getData().word);
             prefix.setText(context.getData().prefix);
 
@@ -46,8 +46,8 @@ public class SentenceItem extends ViewBinderItem<Sentence> {
     }
 
     @Override
-    protected VB getBinder() {
-        return new VB();
+    protected VB getBinder(BindContext context) {
+        return new VB(context);
     }
 
     @Override

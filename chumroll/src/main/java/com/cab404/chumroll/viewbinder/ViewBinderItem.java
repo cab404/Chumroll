@@ -15,9 +15,9 @@ public abstract class ViewBinderItem<Item> implements ViewConverter<Item> {
 
     private final static int BINDER_TAG = 91550361;
 
-    protected abstract ViewBinder<Item> getBinder();
+    protected abstract ViewBinder<Item> getBinder(BindContext context);
 
-    private BindContext<Item> context = new BindContext<>();
+    private BindContextImpl<Item> context = new BindContextImpl<>();
 
     @SuppressWarnings("unchecked")
     @Override
@@ -30,8 +30,7 @@ public abstract class ViewBinderItem<Item> implements ViewConverter<Item> {
         ViewBinder<Item> binder = (ViewBinder<Item>) view.getTag(BINDER_TAG);
 
         if (binder == null) {
-            binder = getBinder();
-            binder.init(context);
+            binder = getBinder(context);
             view.setTag(BINDER_TAG, binder);
         }
 

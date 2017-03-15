@@ -10,30 +10,12 @@ import com.cab404.chumroll.ChumrollAdapter;
  *
  * @author cab404
  */
-public class BindContext<Item> {
-    int index;
-    View view;
-    Item data;
-    ViewParent parent;
-    ChumrollAdapter adapter;
+public interface BindContext {
 
-    public int getIndex() {
-        return index;
-    }
+    View getView();
 
-    public View getView() {
-        return view;
-    }
+    ViewParent getParent();
 
-    public Item getData() {
-        return data;
-    }
+    ChumrollAdapter getAdapter();
 
-    public ViewParent getParent() {
-        return parent;
-    }
-
-    public ChumrollAdapter getAdapter() {
-        return adapter;
-    }
 }

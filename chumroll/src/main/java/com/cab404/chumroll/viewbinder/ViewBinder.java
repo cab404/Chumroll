@@ -5,7 +5,6 @@ package com.cab404.chumroll.viewbinder;
  *
  * @author cab404
  */
-public interface ViewBinder<Item> {
-    void init(BindContext<Item> context);
-    void reuse(BindContext<Item> context);
+public abstract class ViewBinder<Item> {
+    protected abstract void reuse(DataBindContext<Item> context);
 }
