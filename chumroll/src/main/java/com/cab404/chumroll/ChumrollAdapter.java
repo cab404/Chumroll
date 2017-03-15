@@ -15,22 +15,22 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Dynamic adapter, but named Chumroll because of reasons
  * Supports adding multiple types of views.
- * <br/>
+ * <p>
  * And yup, it manages itself.
- * <br/>
+ * <p>
  * <b>ACHTUNG/WARNING</b>:
  * Well, besides it's MAGICAL ability to create BEAUTIFUL and GORGEOUS views,
  * caches are still on ListView, or wherever you've plugged this WONDERFUL adapter.
  * So if you are adding views of some new TYPE, it's better to first UNPLUG adapter
  * from view, usually by passing null to {@link android.widget.AbsListView#setAdapter setAdapter},
  * then ADD and then PLUG it back.
- * <br/>
+ * <p>
  * Or simply add data types with {@link #prepareFor(ViewConverter[])} before initial
  * call to setAdapter(), then you should not experience any problems adding views.
- * <br/>
+ * <p>
  * Actually, I don't know, why do I've added automatic creation of converters using reflection, yet
  * it saves two or three lines of code occasionally.
- * <br/>
+ * <p>
  * Generally you can't modify it's data outside main thread,
  * yet if you really, like REALLY want - create a thread that
  * returns {@code true} in {@code equals()} with {@code Looper.getMainLooper().getThread()}

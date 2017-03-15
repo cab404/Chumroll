@@ -11,11 +11,11 @@ import com.cab404.chumroll.ViewConverter;
  *
  * @author cab404
  */
-public abstract class ViewBinderItem<Item, Binder extends ViewBinder<Item>> implements ViewConverter<Item> {
+public abstract class ViewBinderItem<Item> implements ViewConverter<Item> {
 
     private final static int BINDER_TAG = 91550361;
 
-    protected abstract Binder getBinder();
+    protected abstract ViewBinder<Item> getBinder();
 
     private BindContext<Item> context = new BindContext<>();
 
@@ -27,7 +27,7 @@ public abstract class ViewBinderItem<Item, Binder extends ViewBinder<Item>> impl
         context.index = index;
         context.view = view;
         context.data = data;
-        Binder binder = (Binder) view.getTag(BINDER_TAG);
+        ViewBinder<Item> binder = (ViewBinder<Item>) view.getTag(BINDER_TAG);
 
         if (binder == null) {
             binder = getBinder();

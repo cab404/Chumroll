@@ -18,9 +18,9 @@ import com.cab404.chumroll.viewbinder.ViewBinderItem;
  *
  * @author cab404
  */
-public class SentenceItem extends ViewBinderItem<Sentence, SentenceItem.VB> {
+public class SentenceItem extends ViewBinderItem<Sentence> {
 
-    class VB implements ViewBinder<Sentence> {
+    private class VB implements ViewBinder<Sentence> {
         TextView word;
         TextView prefix;
 
