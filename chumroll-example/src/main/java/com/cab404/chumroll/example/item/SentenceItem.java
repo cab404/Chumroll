@@ -21,7 +21,7 @@ import com.cab404.chumroll.viewbinder.ViewBinderItem;
  */
 public class SentenceItem extends ViewBinderItem<Sentence> {
 
-    private class VB extends ViewBinder<Sentence> {
+    private class VB implements ViewBinder<Sentence> {
         TextView word;
         TextView prefix;
 

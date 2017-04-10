@@ -42,5 +42,6 @@ android {
 apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
 apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
 dependencies {
+
     testCompile 'junit:junit:4.12'
 }

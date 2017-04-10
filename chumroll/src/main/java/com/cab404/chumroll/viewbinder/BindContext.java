@@ -6,7 +6,7 @@ import android.view.ViewParent;
 import com.cab404.chumroll.ChumrollAdapter;
 
 /**
- * Created at 15:59 on 14/03/17
+ * Information about adapter and target view. Used for ViewBinder initialization.
  *
  * @author cab404
  */

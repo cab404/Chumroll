@@ -6,8 +6,6 @@ import android.view.ViewParent;
 import com.cab404.chumroll.ChumrollAdapter;
 
 /**
- * Created at 14:00 on 15/03/17
- *
  * @author cab404
  */
 class BindContextImpl<Item> implements DataBindContext<Item> {
