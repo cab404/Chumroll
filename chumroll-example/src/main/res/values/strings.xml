@@ -23,7 +23,7 @@
         <item>super</item>
         <item>uber</item>
         <item>turbo</item>
-        <item>quad</item>
+        <item>quadro</item>
         <item>tetra</item>
         <item>octo</item>
         <item>deca</item>
@@ -62,4 +62,7 @@
         <item>troll</item>
     </string-array>
     <string name="visit_on_github">Visit on GitHub</string>
+    <string name="item_b">Item B</string>
+    <string name="item_a">Item A</string>
+    <string name="item_c">Item C</string>
 </resources>

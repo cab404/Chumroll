@@ -1,81 +1,72 @@
 package com.cab404.chumroll.example;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.TabLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ListView;
-
-import com.cab404.chumroll.ChumrollAdapter;
-import com.cab404.chumroll.example.item.LabelItem;
-import com.cab404.chumroll.example.item.NumberItem;
-import com.cab404.chumroll.example.item.SentenceItem;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Simple showcase of ChumrollAdapter
  *
  * @author cab404
  */
-public class TestActivity extends Activity {
-    ChumrollAdapter adapter = new ChumrollAdapter();
-    ListView list;
+public class TestActivity extends AppCompatActivity {
+
+    ChumrollTestFragment currentPage = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
 
-        list = (ListView) findViewById(R.id.list);
+        TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
+        tabs.addTab(tabs.newTab().setText("ListView"));
+        tabs.addTab(tabs.newTab().setText("PagerView"));
+        tabs.addTab(tabs.newTab().setText("RecyclerView"));
 
-        /*
-         We plan to add new types of things after adapter is connected,
-         so we should prepare it for that.
-         */
-        adapter.prepareFor(
-                new NumberItem(), new SentenceItem(), new LabelItem()
+        tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                switch (tab.getPosition()) {
+                    case 0:
+                        setFragment(new ListTestFragment());
+                        break;
+                    case 1:
+                        setFragment(new PagerTestFragment());
+                        break;
+                    case 2:
+                        setFragment(new RecyclerTestFragment());
+                        break;
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+            }
+        });
+
+        setFragment(new ListTestFragment());
+
+        ((BottomNavigationView) findViewById(R.id.adder)).setOnNavigationItemSelectedListener(
+                new BottomNavigationView.OnNavigationItemSelectedListener() {
+                    @Override
+                    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                        if (currentPage != null)
+                            currentPage.addItem(item.getItemId());
+                        return true;
+                    }
+                }
         );
 
-        list.setAdapter(adapter);
-
-    }
-
-    /**
-     * Method to generate some words
-     */
-    protected Sentence generateSentence() {
-        Sentence sentence = new Sentence();
-        String[] prefixes = getResources().getStringArray(R.array.prefix);
-
-        String prefix = prefixes[((int) (prefixes.length * Math.random()))];
-
-        sentence.prefix = prefix;
-        sentence.word = generateWord();
-
-        return sentence;
-    }
-
-    /**
-     * Another method to generate some words
-     */
-    private String generateWord() {
-        String[] parts = getResources().getStringArray(R.array.start_part);
-        String[] words = getResources().getStringArray(R.array.end_part);
-        String end = words[((int) (words.length * Math.random()))];
-        ArrayList<String> nominatedParts = new ArrayList<>(Arrays.asList(parts));
-        StringBuilder word = new StringBuilder();
-
-        int partSize = (int) (Math.sqrt(Math.random()) * 4);
-        for (int i = 0; i < partSize; i++)
-            word.append(nominatedParts.remove((int) (Math.random() * nominatedParts.size())));
-
-        word.append(end);
-        return word.toString();
     }
 
     @Override
@@ -84,21 +75,16 @@ public class TestActivity extends Activity {
         return true;
     }
 
-    public void addItem(View view) {
-        switch (view.getId()) {
-            case R.id.a:
-                list.setSelection(adapter.indexOfId(adapter.add(NumberItem.class, (int) (Math.random() * 5000))));
-                break;
-            case R.id.b:
-                list.setSelection(adapter.indexOfId(adapter.add(SentenceItem.class, generateSentence())));
-                break;
-            case R.id.c:
-                list.setSelection(adapter.indexOfId(adapter.add(LabelItem.class, generateWord())));
-                break;
-        }
-    }
 
     public void openGithub(MenuItem item) {
         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/cab404/Chumroll")));
+    }
+
+
+    public void setFragment(ChumrollTestFragment fragment) {
+        currentPage = fragment;
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.content, fragment)
+                .commit();
     }
 }

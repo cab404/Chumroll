@@ -8,6 +8,8 @@ import android.widget.TextView;
 import com.cab404.chumroll.ChumrollAdapter;
 import com.cab404.chumroll.ViewConverter;
 import com.cab404.chumroll.example.R;
+import com.cab404.chumroll.proxies.ChumrollPagerAdapter;
+import com.cab404.chumroll.proxies.PagerMetaProvider;
 
 /**
  * Label item
@@ -16,7 +18,7 @@ import com.cab404.chumroll.example.R;
  *
  * @author cab404
  */
-public class LabelItem implements ViewConverter<String> {
+public class LabelItem implements ViewConverter<String>, PagerMetaProvider {
     @Override
     public void convert(View view, String data, int index, ViewGroup parent, final ChumrollAdapter adapter) {
         final int id = adapter.idOf(index);
@@ -37,5 +39,15 @@ public class LabelItem implements ViewConverter<String> {
     @Override
     public boolean enabled(String data, int index, ChumrollAdapter adapter) {
         return true;
+    }
+
+    @Override
+    public float getViewPagerPageWidth(ChumrollPagerAdapter adapter, int position) {
+        return 0.7f;
+    }
+
+    @Override
+    public String getViewPagerPageTitle(ChumrollPagerAdapter adapter, int position) {
+        return ((String) adapter.getAdapter().getItem(position));
     }
 }

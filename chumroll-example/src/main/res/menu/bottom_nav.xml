@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/a"
+        android:icon="@drawable/ic_directions_boat"
+        android:title="@string/item_a" />
+    <item
+        android:id="@+id/b"
+        android:icon="@drawable/ic_audiotrack"
+        android:title="@string/item_b" />
+    <item
+        android:id="@+id/c"
+        android:icon="@drawable/ic_bug_report"
+        android:title="@string/item_c" />
+</menu>

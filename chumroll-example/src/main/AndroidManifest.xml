@@ -6,8 +6,8 @@
         android:label="Chumroll">
         <activity
             android:name=".TestActivity"
-            android:screenOrientation="sensorPortrait"
-            >
+            android:theme="@style/AppTheme"
+            android:screenOrientation="sensorPortrait">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER"/>
                 <category android:name="android.intent.category.DEFAULT"/>

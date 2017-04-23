@@ -1,4 +1,4 @@
-package com.cab404.chumroll.recyclerview;
+package com.cab404.chumroll.proxies;
 
 import org.junit.Test;
 

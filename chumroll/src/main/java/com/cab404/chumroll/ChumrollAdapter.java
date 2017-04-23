@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -21,9 +22,10 @@ import java.util.concurrent.atomic.AtomicInteger;
  * <b>ACHTUNG/WARNING</b>:
  * Well, besides it's MAGICAL ability to create BEAUTIFUL and GORGEOUS views,
  * caches are still on ListView, or wherever you've plugged this WONDERFUL adapter.
+ * <p>
  * So if you are adding views of some new TYPE, it's better to first UNPLUG adapter
  * from view, usually by passing null to {@link android.widget.AbsListView#setAdapter setAdapter},
- * then ADD and then PLUG it back.
+ * then ADD your data and then PLUG it back.
  * <p>
  * Or simply add data types with {@link #prepareFor(ViewConverter[])} before initial
  * call to setAdapter(), then you should not experience any problems adding views.
@@ -31,9 +33,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Actually, I don't know, why do I've added automatic creation of converters using reflection, yet
  * it saves two or three lines of code occasionally.
  * <p>
- * Generally you can't modify it's data outside main thread,
- * yet if you really, like REALLY want - create a thread that
- * returns {@code true} in {@code equals()} with {@code Looper.getMainLooper().getThread()}
+ * You can't modify it's data outside main thread if you set it as adapter for a view, yet you
+ * can modify whatever you want as long as it is unplugged
  *
  * @author cab404
  */
@@ -59,7 +60,7 @@ public class ChumrollAdapter extends BaseAdapter {
      * Cached layout inflater
      */
     protected LayoutInflater inf;
-    protected AtomicInteger observers = new AtomicInteger(0);
+    protected AtomicInteger observerCount = new AtomicInteger(0);
 
     {
         usedConverters = new ArrayList<>();
@@ -77,20 +78,32 @@ public class ChumrollAdapter extends BaseAdapter {
     @Override
     public void registerDataSetObserver(DataSetObserver observer) {
         if (observer == null) return;
-        observers.incrementAndGet();
+        observerCount.incrementAndGet();
         super.registerDataSetObserver(observer);
     }
 
     @Override
     public void unregisterDataSetObserver(DataSetObserver observer) {
-        observers.decrementAndGet();
+        observerCount.decrementAndGet();
         super.unregisterDataSetObserver(observer);
     }
 
+    /**
+     * Adds DataSetObservable without enabling thread safety alarms.
+     * Useful when implementing some sort of proxy and you need to track changes of data,
+     * but still want library user to have ability to add items outside of main thread while
+     * adapter is detached.
+     */
+    public void addUntrackedObservable(DataSetObserver observer){
+        if (observer == null) return;
+        super.registerDataSetObserver(observer);
+    }
+
     protected void throwIfIllegal() {
-        if (observers.get() == 0)
+        if (observerCount.get() == 0)
             return;
-        if (!Thread.currentThread().equals(Looper.getMainLooper().getThread()))
+
+        if (Looper.myLooper() != Looper.getMainLooper())
             throw new UnsupportedOperationException(
                     "Operation on connected adapter should be done inside main thread!"
             );
@@ -107,23 +120,45 @@ public class ChumrollAdapter extends BaseAdapter {
         return -1;
     }
 
+
     /**
-     * Adds new entry into adapter.
+     * Replaces entry with given index with a new one.
      */
-    @SuppressWarnings("unchecked")
-    public <Data> int add(ViewConverter<Data> instance, Data data) {
+    public <Data> int replace(int index, ViewConverter<Data> instance, Data data) {
         throwIfIllegal();
         addConverterWithCheck(instance);
         final ViewBinder<Data> binder = new ViewBinder<>(instance, data);
-        list.add(binder);
+        list.set(index, binder);
         notifyDataSetChanged();
         return binder.id;
     }
 
     /**
+     * Updates data at index with given index. <p>
+     * Difference between {@link #replace} is that entry id won't be changed. <p>
+     * Also it consumes less memory to update a bunch of entries instead of replacing them. <p>
+     * Not a very safe method, though, because no type checking could be done. You'll know about your mistakes by the time ClassCastException hits you.
+     */
+    public <Data> void update(int index, Data data) {
+        throwIfIllegal();
+        list.get(index).data = data;
+        notifyDataSetChanged();
+    }
+
+
+    /**
      * Adds new entry into adapter.
      */
-    @SuppressWarnings("unchecked")
+    public <Data> int add(ViewConverter<Data> instance, Data data) {
+        return add(getCount(), instance, data);
+    }
+
+    /**
+     * Adds new entry into adapter.
+     *
+     * @return new item's id
+     * @throws UnsupportedOperationException If is connected to a view and operation implies adding new view type.
+     */
     public <Data> int add(int index, ViewConverter<Data> instance, Data data) {
         throwIfIllegal();
         addConverterWithCheck(instance);
@@ -138,37 +173,37 @@ public class ChumrollAdapter extends BaseAdapter {
      */
     @SuppressWarnings("unchecked")
     public <Data> void addAll(ViewConverter<Data> instance, Collection<? extends Data> data_set) {
+        addAll(getCount(), instance, data_set);
+    }
+
+    /**
+     * Adds new entry into adapter.
+     */
+    @SuppressWarnings("unchecked")
+    public <Data> void addAll(int index, ViewConverter<Data> instance, Collection<? extends Data> data_set) {
         throwIfIllegal();
         addConverterWithCheck(instance);
+        final LinkedList<ViewBinder<Data>> mapped = new LinkedList<>();
         for (Data data : data_set)
-            list.add(new ViewBinder<>(instance, data));
+            mapped.add(new ViewBinder<>(instance, data));
+        list.addAll(index, mapped);
         notifyDataSetChanged();
     }
 
     /**
      * Removes item by its id.
      *
-     * @see ChumrollAdapter#add(Class, Object)
-     * @see ChumrollAdapter#add(ViewConverter, Object)
-     * @see ChumrollAdapter#add(int, Class, Object)
+     * @see ChumrollAdapter#getItemId(int)
      * @see ChumrollAdapter#add(int, ViewConverter, Object)
      */
     public void removeById(int id) {
-        throwIfIllegal();
-        for (int i = 0; i < list.size(); i++) {
-            if (list.get(i).id == id) {
-                list.remove(i);
-                notifyDataSetChanged();
-                break;
-            }
-        }
+        final int index = indexOfId(id);
+        if (index >= 0)
+            remove(index);
     }
 
     /**
      * @return index in list of item with given id.
-     * @see ChumrollAdapter#add(Class, Object)
-     * @see ChumrollAdapter#add(ViewConverter, Object)
-     * @see ChumrollAdapter#add(int, Class, Object)
      * @see ChumrollAdapter#add(int, ViewConverter, Object)
      */
     public int indexOfId(int id) {
@@ -218,7 +253,7 @@ public class ChumrollAdapter extends BaseAdapter {
 
     private <Data> void addConverterWithCheck(ViewConverter<Data> instance) {
         if (!usedConverters.contains(instance)) {
-            if (observers.get() > 0) {
+            if (observerCount.get() > 0) {
                 throw new RuntimeException(instance.getClass().getSimpleName() + ": Cannot add new data types on fly :(");
             }
             usedConverters.add(instance);
@@ -251,6 +286,7 @@ public class ChumrollAdapter extends BaseAdapter {
     public void remove(int at) {
         throwIfIllegal();
         list.remove(at);
+        notifyDataSetChanged();
     }
 
     /**
@@ -258,6 +294,11 @@ public class ChumrollAdapter extends BaseAdapter {
      */
     public <Data> void remove(Data what) {
         remove(indexOf(what));
+    }
+
+    public void move(int fromIndex, int toIndex) {
+        list.add(toIndex, list.remove(fromIndex));
+        notifyDataSetChanged();
     }
 
     /**
@@ -350,7 +391,7 @@ public class ChumrollAdapter extends BaseAdapter {
     public void prepareFor(ViewConverter... prepare_to_what) {
         for (ViewConverter thing : prepare_to_what) {
             converters.enforceInstance(thing);
-            if (observers.get() > 0)
+            if (observerCount.get() > 0)
                 throw new RuntimeException("Cannot add new data types on fly :(");
             usedConverters.add(thing);
         }

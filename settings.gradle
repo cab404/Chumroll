@@ -1,1 +1,1 @@
-include ':chumroll', ':chumroll-example', ':chumrollrecyclerview'
+include ':chumroll', ':chumroll-example', ':chumroll-proxies'

@@ -8,6 +8,8 @@ import android.widget.TextView;
 import com.cab404.chumroll.ChumrollAdapter;
 import com.cab404.chumroll.example.R;
 import com.cab404.chumroll.example.Sentence;
+import com.cab404.chumroll.proxies.ChumrollPagerAdapter;
+import com.cab404.chumroll.proxies.PagerMetaProvider;
 import com.cab404.chumroll.viewbinder.BindContext;
 import com.cab404.chumroll.viewbinder.DataBindContext;
 import com.cab404.chumroll.viewbinder.ViewBinder;
@@ -19,7 +21,7 @@ import com.cab404.chumroll.viewbinder.ViewBinderItem;
  *
  * @author cab404
  */
-public class SentenceItem extends ViewBinderItem<Sentence> {
+public class SentenceItem extends ViewBinderItem<Sentence> implements PagerMetaProvider {
 
     private class VB implements ViewBinder<Sentence> {
         TextView word;
@@ -58,5 +60,15 @@ public class SentenceItem extends ViewBinderItem<Sentence> {
     @Override
     public boolean enabled(Sentence data, int index, ChumrollAdapter adapter) {
         return true;
+    }
+
+    @Override
+    public float getViewPagerPageWidth(ChumrollPagerAdapter adapter, int position) {
+        return 0.8f;
+    }
+
+    @Override
+    public String getViewPagerPageTitle(ChumrollPagerAdapter adapter, int position) {
+        return ((Sentence) adapter.getAdapter().getItem(position)).word;
     }
 }
