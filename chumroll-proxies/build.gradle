@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 
 ext {
     bintrayRepo = 'maven'
-    bintrayName = 'chumroll'
+    bintrayName = 'chumroll-proxies'
 
     publishedGroupId = 'com.cab404'
     libraryName = 'chumroll-proxies'

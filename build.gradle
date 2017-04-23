@@ -10,7 +10,7 @@ buildscript {
 }
 
 ext {
-    libVersion = '1.1.0'
+    libVersion = '1.1.2'
 }
 
 allprojects {
