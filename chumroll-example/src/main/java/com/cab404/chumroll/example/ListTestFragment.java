@@ -10,7 +10,7 @@ import android.widget.ListView;
 import com.cab404.chumroll.ChumrollAdapter;
 
 /**
- * Created at 12:09 on 22/04/17
+ * ListView test fragment
  *
  * @author cab404
  */

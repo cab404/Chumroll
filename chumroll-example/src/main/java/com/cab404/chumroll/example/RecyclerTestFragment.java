@@ -13,7 +13,7 @@ import com.cab404.chumroll.ChumrollAdapter;
 import com.cab404.chumroll.proxies.ChumrollRecyclerAdapter;
 
 /**
- * Created at 12:09 on 22/04/17
+ * RecyclerView test fragment
  *
  * @author cab404
  */

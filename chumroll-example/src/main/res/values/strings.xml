@@ -65,4 +65,7 @@
     <string name="item_b">Item B</string>
     <string name="item_a">Item A</string>
     <string name="item_c">Item C</string>
+    <string name="tab_list">ListView</string>
+    <string name="tab_pager">PagerView</string>
+    <string name="tab_recycler">RecyclerView</string>
 </resources>

@@ -25,9 +25,9 @@ public class TestActivity extends AppCompatActivity {
         setContentView(R.layout.activity_test);
 
         TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
-        tabs.addTab(tabs.newTab().setText("ListView"));
-        tabs.addTab(tabs.newTab().setText("PagerView"));
-        tabs.addTab(tabs.newTab().setText("RecyclerView"));
+        tabs.addTab(tabs.newTab().setText(R.string.tab_list));
+        tabs.addTab(tabs.newTab().setText(R.string.tab_pager));
+        tabs.addTab(tabs.newTab().setText(R.string.tab_recycler));
 
         tabs.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override

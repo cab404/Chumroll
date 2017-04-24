@@ -18,8 +18,11 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.doubleClick;
+import static android.support.test.espresso.action.ViewActions.swipeDown;
 import static android.support.test.espresso.action.ViewActions.swipeLeft;
 import static android.support.test.espresso.action.ViewActions.swipeRight;
+import static android.support.test.espresso.action.ViewActions.swipeUp;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
@@ -33,55 +36,65 @@ public class TestActivityTest {
     @Rule
     public ActivityTestRule<TestActivity> mActivityTestRule = new ActivityTestRule<>(TestActivity.class);
 
+    /**
+     * Adds and removes some items.
+     */
     @Test
     public void testActivityTest() {
 
-        onView(allOf(withText("ListView"), isDisplayed())).perform(click());
-
-        addSomeItems();
-        removeSomeItems();
-
-        onView(allOf(withText("PagerView"), isDisplayed())).perform(click());
-
-        addSomeItems();
-        removeSomeItems();
-
-        ViewInteraction pager = onView(
+        ViewInteraction container = onView(
                 allOf(withParent(withId(R.id.content)),
                         isDisplayed()));
 
-        for (int i = 0; i < 5; i++) pager.perform(swipeLeft());
-        for (int i = 0; i < 5; i++) pager.perform(swipeRight());
+        onView(allOf(withText(R.string.tab_list), isDisplayed())).perform(click());
 
-        onView(allOf(withText("RecyclerView"), isDisplayed())).perform(click());
+        addSomeItems(10);
+        removeSomeItems(3);
 
-        addSomeItems();
-        removeSomeItems();
+        for (int i = 0; i < 2; i++) container.perform(swipeUp());
+        for (int i = 0; i < 2; i++) container.perform(swipeDown());
+
+        onView(allOf(withText(R.string.tab_pager), isDisplayed())).perform(click());
+
+        addSomeItems(1);
+        removeSomeItems(2);
+
+        for (int i = 0; i < 5; i++) container.perform(swipeLeft());
+        for (int i = 0; i < 5; i++) container.perform(swipeRight());
+
+        onView(allOf(withText(R.string.tab_recycler), isDisplayed())).perform(click());
+
+        addSomeItems(10);
+        removeSomeItems(4);
+
+        for (int i = 0; i < 2; i++) container.perform(swipeUp());
+        for (int i = 0; i < 2; i++) container.perform(swipeDown());
+
     }
 
-    private void removeSomeItems() {
+    private void removeSomeItems(int num) {
         ViewInteraction item = onView(
                 allOf(
                         childAtPosition(allOf(withParent(withId(R.id.content))), 1),
                         isDisplayed()
                 )
         );
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < num; i++) {
             item.perform(click());
         }
     }
 
-    private void addSomeItems() {
-        for (int i = 0; i < 4; i++) {
+    private void addSomeItems(int rounds) {
+        for (int i = 0; i < rounds; i++) {
             ViewInteraction a = onView(
                     allOf(withId(R.id.a), isDisplayed()));
-            a.perform(click());
+            a.perform(doubleClick());
             ViewInteraction b = onView(
                     allOf(withId(R.id.b), isDisplayed()));
-            b.perform(click());
+            b.perform(doubleClick());
             ViewInteraction c = onView(
                     allOf(withId(R.id.c), isDisplayed()));
-            c.perform(click());
+            c.perform(doubleClick());
         }
     }
 

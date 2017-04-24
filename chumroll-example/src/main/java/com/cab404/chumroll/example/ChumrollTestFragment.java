@@ -12,7 +12,7 @@ import com.cab404.chumroll.example.item.SentenceItem;
 import com.cab404.chumroll.example.item.Util;
 
 /**
- * Created at 15:27 on 23/04/17
+ * Common functionality for all of test fragments with Chumroll
  *
  * @author cab404
  */
@@ -20,6 +20,9 @@ public abstract class ChumrollTestFragment extends Fragment {
 
     abstract ChumrollAdapter getAdapter();
 
+    /**
+     * Adds item to adapter
+     */
     public void addItem(int what) {
         switch (what) {
             case R.id.a:
@@ -40,9 +43,13 @@ public abstract class ChumrollTestFragment extends Fragment {
         initItems();
     }
 
-    void initItems(){
+    /**
+     * Initializes adapter with some items
+     */
+    void initItems() {
         getAdapter().prepareFor(new LabelItem(), new NumberItem(), new SentenceItem());
         for (int i = 0; i < 5; i++) {
+            // Pretty rough approach, but it works since ids a, b and c are declared one after another.
             int item = (int) (R.id.a + (Math.random() * 3));
             addItem(item);
         }
