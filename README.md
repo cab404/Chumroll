@@ -13,6 +13,8 @@ simple example app is in `chumroll-example` module.
 
 i also use it in my project [phclient](https://github.com/cab404/phclient), where it proved itself reliable.
 
-to use it just add `compile 'com.cab404:chumroll:1.1.0'` to your module dependencies
+to use it just add `compile 'com.cab404:chumroll:1.1.2'` to your module dependencies
+
+if you want to use it with RecyclerView or ViewPager, when add `compile 'com.cab404:chumroll-proxies:1.1.2'` as well
 
 #### [here's tutorial](https://github.com/cab404/chumroll/wiki/Simple-how-to)
