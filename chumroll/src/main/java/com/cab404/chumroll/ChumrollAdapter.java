@@ -94,7 +94,7 @@ public class ChumrollAdapter extends BaseAdapter {
      * but still want library user to have ability to add items outside of main thread while
      * adapter is detached.
      */
-    public void addUntrackedObservable(DataSetObserver observer){
+    public void addUntrackedObservable(DataSetObserver observer) {
         if (observer == null) return;
         super.registerDataSetObserver(observer);
     }
@@ -114,12 +114,26 @@ public class ChumrollAdapter extends BaseAdapter {
      */
     public int indexOf(Object data) {
         throwIfIllegal();
-        for (int i = 0; i < list.size(); i++)
-            if (list.get(i).data.equals(data))
+        for (int i = 0; i < list.size(); i++) {
+            final Object item = list.get(i).data;
+            if (item == null ? data == null : item.equals(data))
                 return i;
+        }
         return -1;
     }
 
+    /**
+     * @return first index in adapter, which has given data and type.
+     */
+    public int indexOf(Class<ViewConverter> clazz, Object data) {
+        throwIfIllegal();
+        for (int i = 0; i < list.size(); i++) {
+            final ViewBinder item = list.get(i);
+            if (clazz.isInstance(item.converter) && item.data == null ? data == null : item.equals(data))
+                return i;
+        }
+        return -1;
+    }
 
     /**
      * Replaces entry with given index with a new one.
