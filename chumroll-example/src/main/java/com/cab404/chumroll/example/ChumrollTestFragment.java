@@ -11,6 +11,8 @@ import com.cab404.chumroll.example.item.NumberItem;
 import com.cab404.chumroll.example.item.SentenceItem;
 import com.cab404.chumroll.example.item.Util;
 
+import java.util.Arrays;
+
 /**
  * Common functionality for all of test fragments with Chumroll
  *
@@ -26,7 +28,12 @@ public abstract class ChumrollTestFragment extends Fragment {
     public void addItem(int what) {
         switch (what) {
             case R.id.a:
-                getAdapter().add(SentenceItem.class, Sentence.generateSentence(getContext()));
+                getAdapter().addAll(SentenceItem.class,
+                        Arrays.asList(
+                                Sentence.generateSentence(getContext()),
+                                Sentence.generateSentence(getContext())
+                        )
+                );
                 break;
             case R.id.b:
                 getAdapter().add(NumberItem.class, Util.generateRandom());

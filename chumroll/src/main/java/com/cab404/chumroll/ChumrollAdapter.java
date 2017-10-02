@@ -174,11 +174,24 @@ public class ChumrollAdapter extends BaseAdapter {
      * @throws UnsupportedOperationException If is connected to a view and operation implies adding new view type.
      */
     public <Data> int add(int index, ViewConverter<Data> instance, Data data) {
+        try {
+            return addRaw(index, instance, data);
+        } finally {
+            notifyDataSetChanged();
+        }
+    }
+
+    /**
+     * Adds new entry into adapter, and does not invoke {@link #notifyDataSetChanged}
+     *
+     * @return new item's id
+     * @throws UnsupportedOperationException If is connected to a view and operation implies adding new view type.
+     */
+    protected <Data> int addRaw(int index, ViewConverter<Data> instance, Data data) {
         throwIfIllegal();
         addConverterWithCheck(instance);
         final ViewBinder<Data> binder = new ViewBinder<>(instance, data);
         list.add(index, binder);
-        notifyDataSetChanged();
         return binder.id;
     }
 
@@ -195,13 +208,21 @@ public class ChumrollAdapter extends BaseAdapter {
      */
     @SuppressWarnings("unchecked")
     public <Data> void addAll(int index, ViewConverter<Data> instance, Collection<? extends Data> data_set) {
+        addAllRaw(index, instance, data_set);
+        notifyDataSetChanged();
+    }
+
+    /**
+     * Adds new entry into adapter.
+     */
+    @SuppressWarnings("unchecked")
+    public <Data> void addAllRaw(int index, ViewConverter<Data> instance, Collection<? extends Data> data_set) {
         throwIfIllegal();
         addConverterWithCheck(instance);
         final LinkedList<ViewBinder<Data>> mapped = new LinkedList<>();
         for (Data data : data_set)
             mapped.add(new ViewBinder<>(instance, data));
         list.addAll(index, mapped);
-        notifyDataSetChanged();
     }
 
     /**
