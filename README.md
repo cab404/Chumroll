@@ -16,8 +16,10 @@ i also use it in my project [phclient](https://github.com/cab404/phclient), wher
 
 to use it just add `compile 'com.cab404:chumroll:1.1.4'` to your module dependencies
 
-if you want to use it with RecyclerView or ViewPager, when add `compile 'com.cab404:chumroll-proxies:1.1.4'` as well
+if you want to use it with RecyclerView or ViewPager, then add `compile 'com.cab404:chumroll-proxies:1.1.4'` as well
 
-#### [here's tutorial](https://github.com/cab404/chumroll/wiki/Simple-how-to)
+#### [here's tutorial][tutorial]
 
-[](pumpkins and overpowered anthro dogs are not included.)
+[tutorial]: https://github.com/cab404/chumroll/wiki/Simple-how-to
+
+[disclaimer]: pumpkins_and_overpowered_anthro_dogs_are_not_included.
