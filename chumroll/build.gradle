@@ -47,5 +47,5 @@ if (project.rootProject.file('local.properties').exists()) {
 
 dependencies {
 
-    testCompile 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.12'
 }
