@@ -20,8 +20,8 @@ public class WatchingChumrollAdapter extends ChumrollAdapter {
     }
 
     @Override
-    public <Data> int add(int index, ViewConverter<Data> instance, Data data) {
-        final int id = super.add(index, instance, data);
+    public <Data> int addRaw(int index, ViewConverter<Data> instance, Data data) {
+        final int id = super.addRaw(index, instance, data);
         onItemAdded(index);
         return id;
     }
@@ -40,7 +40,7 @@ public class WatchingChumrollAdapter extends ChumrollAdapter {
     }
 
     @Override
-    public <Data> void addAll(int index, ViewConverter<Data> instance, Collection<? extends Data> data_set) {
+    public <Data> void addAllRaw(int index, ViewConverter<Data> instance, Collection<? extends Data> data_set) {
         super.addAllRaw(getCount(), instance, data_set);
         onItemRangeAdded(index, data_set.size());
     }
