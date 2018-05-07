@@ -196,7 +196,7 @@ public class ChumrollAdapter extends BaseAdapter {
     }
 
     /**
-     * Adds new entry into adapter.
+     * Adds new entries into adapter.
      */
     @SuppressWarnings("unchecked")
     public <Data> void addAll(ViewConverter<Data> instance, Collection<? extends Data> data_set) {
@@ -204,7 +204,7 @@ public class ChumrollAdapter extends BaseAdapter {
     }
 
     /**
-     * Adds new entry into adapter.
+     * Adds new entries into adapter.
      */
     @SuppressWarnings("unchecked")
     public <Data> void addAll(int index, ViewConverter<Data> instance, Collection<? extends Data> data_set) {
@@ -213,7 +213,7 @@ public class ChumrollAdapter extends BaseAdapter {
     }
 
     /**
-     * Adds new entry into adapter.
+     * Adds new entries into adapter without invoking {@link #notifyDataSetChanged()}, just like {@link #addRaw(int, ViewConverter, Object)}
      */
     @SuppressWarnings("unchecked")
     public <Data> void addAllRaw(int index, ViewConverter<Data> instance, Collection<? extends Data> data_set) {
@@ -453,6 +453,8 @@ public class ChumrollAdapter extends BaseAdapter {
         return list.get(index).converter;
     }
 
+    protected AtomicInteger nonce = new AtomicInteger();
+
     /**
      * Simple entry POJO.
      */
@@ -464,8 +466,7 @@ public class ChumrollAdapter extends BaseAdapter {
         public ViewBinder(ViewConverter<? extends From> converter, From data) {
             this.converter = converter;
             this.data = data;
-            final int rnd = (int) (Math.random() * Integer.MAX_VALUE);
-            this.id = converter.hashCode() ^ rnd;
+            this.id = nonce.getAndIncrement();
         }
 
     }
