@@ -5,7 +5,7 @@ env:
   matrix:
 # Somewhat dead
 #    - SDK=10
-    - SDK=14
+#    - SDK=14
     - SDK=22
 
 before_script:
