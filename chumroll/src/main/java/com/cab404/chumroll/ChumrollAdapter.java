@@ -199,16 +199,16 @@ public class ChumrollAdapter extends BaseAdapter {
      * Adds new entries into adapter.
      */
     @SuppressWarnings("unchecked")
-    public <Data> void addAll(ViewConverter<Data> instance, Collection<? extends Data> data_set) {
-        addAll(getCount(), instance, data_set);
+    public <Data> void addAll(ViewConverter<Data> instance, Collection<? extends Data> dataSet) {
+        addAll(getCount(), instance, dataSet);
     }
 
     /**
      * Adds new entries into adapter.
      */
     @SuppressWarnings("unchecked")
-    public <Data> void addAll(int index, ViewConverter<Data> instance, Collection<? extends Data> data_set) {
-        addAllRaw(index, instance, data_set);
+    public <Data> void addAll(int index, ViewConverter<Data> instance, Collection<? extends Data> dataSet) {
+        addAllRaw(index, instance, dataSet);
         notifyDataSetChanged();
     }
 
@@ -216,11 +216,11 @@ public class ChumrollAdapter extends BaseAdapter {
      * Adds new entries into adapter without invoking {@link #notifyDataSetChanged()}, just like {@link #addRaw(int, ViewConverter, Object)}
      */
     @SuppressWarnings("unchecked")
-    public <Data> void addAllRaw(int index, ViewConverter<Data> instance, Collection<? extends Data> data_set) {
+    public <Data> void addAllRaw(int index, ViewConverter<Data> instance, Collection<? extends Data> dataSet) {
         throwIfIllegal();
         addConverterWithCheck(instance);
         final LinkedList<ViewBinder<Data>> mapped = new LinkedList<>();
-        for (Data data : data_set)
+        for (Data data : dataSet)
             mapped.add(new ViewBinder<>(instance, data));
         list.addAll(index, mapped);
     }
@@ -281,9 +281,9 @@ public class ChumrollAdapter extends BaseAdapter {
      * Adds new entry into adapter.
      */
     @SuppressWarnings("unchecked")
-    public <Data> void addAll(Class<? extends ViewConverter<Data>> converter, Collection<? extends Data> data_set) {
+    public <Data> void addAll(Class<? extends ViewConverter<Data>> converter, Collection<? extends Data> dataSet) {
         ViewConverter<Data> instance = (ViewConverter<Data>) converters.getInstance(converter);
-        addAll(instance, data_set);
+        addAll(instance, dataSet);
     }
 
     private <Data> void addConverterWithCheck(ViewConverter<Data> instance) {
@@ -423,8 +423,8 @@ public class ChumrollAdapter extends BaseAdapter {
      * You can stuff a bunch of converters inside right here,
      * if you are planning to add data of this type to adapter after connecting it to ListView.
      */
-    public void prepareFor(ViewConverter... prepare_to_what) {
-        for (ViewConverter thing : prepare_to_what) {
+    public void prepareFor(ViewConverter... prepareForWhat) {
+        for (ViewConverter thing : prepareForWhat) {
             converters.enforceInstance(thing);
             if (observerCount.get() > 0)
                 throw new RuntimeException("Cannot add new data types on fly :(");
